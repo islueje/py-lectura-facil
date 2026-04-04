@@ -26,7 +26,13 @@ Módulo para la validación de textos de Lectura Fácil
 """
 
 
-    
+
+
+# Importación de módulos
+import re
+
+
+
     
 # Inicialmente se parte de 100 puntos
 # Se van revisando los n criterios y en caso de existir utilización de los mismos se van descontando puntos según una ponderación del criterio y 
@@ -39,17 +45,23 @@ Módulo para la validación de textos de Lectura Fácil
 def ValidacionLFTexto(texto):
     
     
-    Criterios = [
+    Criterios = (
         "UtilizacionPuntoComa",
-        "UtilizacionEtcOPuntosSuspensivos"
-    ]
+        "UtilizacionEtcOPuntosSuspensivos",
+	    "UtilizacionPalabrasLargasOSilabasComplejas",
+        "UtilizacionAdverbiosMente"
+    )
     
     
     # Diccionario de ponderaciones de los criterios
     Ponderacion_Criterios = {
         Criterios[0]: 2,
-        Criterios[1]: 5
+        Criterios[1]: 5,
+	    Criterios[2]: 3,
+        Criterios[3]: 2
     }
+
+
 
 
     # Se comprueba la utilización o no de un criterio en un texto
@@ -60,24 +72,72 @@ def ValidacionLFTexto(texto):
     #   Entero con el número de ocurrencias
     #   String con la recomendación asociada
     def Utilizacion(criterio, texto):
+
         
-        if (criterio == Criterios[0]): # "UtilizacionPuntoComa" 6.1.7
+        # "UtilizacionPuntoComa" 6.1.7
+        if (criterio == Criterios[0]): 
             
-            if (';' in texto):
-                return texto.count(';'), "*No se debe utilizar el punto y coma (;).\n"
+            #ocurrencias = texto.count(';')
+            ocurrencias = re.findall(r";", texto)
+            
+            if (len(ocurrencias) > 0):
+                return len(ocurrencias), str(ocurrencias) + " *No se debe utilizar el punto y coma (;).\n"
             else:
                 return 0, "" 
+
+
+
+
+        # "UtilizacionEtcOPuntosSuspensivos" 6.1.9
+        elif (criterio == Criterios[1]): 
             
-        elif (criterio == Criterios[1]): # "UtilizacionEtcOPuntosSuspensivos" 6.1.9
+            #ocurrencias = texto.count("etcétera") + texto.count("etc") + texto.count("...")
+            ocurrencias = re.findall(r"(\betcétera\b|\betc\b|\.\.\.)", texto, re.IGNORECASE)
             
-            if ("etcétera" in texto or "etc." in texto or "..." in texto):
-                ocurrencias = texto.count("etcétera") + texto.count("etc.") + texto.count("...")
-                return ocurrencias, "*No se debe utilizar (etcétera) (etc.), ni los puntos suspensivos (…). Se puede sustituir por (entre otros), (y muchos más) y otras frases similares.\n"
+            if (len(ocurrencias) > 0):    
+                return len(ocurrencias), str(ocurrencias) + " *No se debe utilizar (etcétera) (etc), ni los puntos suspensivos (…). Se puede sustituir por (entre otros), (y muchos más) y otras frases similares.\n"
             else:
                 return 0, ""
-            
+
+
+
+
+        # "UtilizacionPalabrasLargasOSilabasComplejas" 6.2.6
+        elif (criterio == Criterios[2]): 
+
+            ocurrenciasPalabrasLargas = 0
+            palabras = texto.split()
+            for p in palabras:
+                if (len(p) >= 13):
+                    ocurrenciasPalabrasLargas = ocurrenciasPalabrasLargas + 1
+                    
+            # Falta añadir la comprobación de sílabas complejas, diptongos y triptongos, vía re
+	    
+            if (ocurrenciasPalabrasLargas > 0):
+                return ocurrenciasPalabrasLargas, "*Se debería evitar el uso de palabras muy largas o que contengan sílabas complejas.\n"
+            else:
+                return 0, ""
+
+
+
+        
+        # "UtilizacionAdverbiosMente" 6.2.7    
+        elif (criterio == Criterios[3]): 
+        
+            ocurrencias = re.findall(r"\w+mente\b", texto, re.IGNORECASE)
+	    
+            if (len(ocurrencias) > 0):
+                return len(ocurrencias), "*Se deben evitar los adverbios terminados en (–mente).\n"
+            else:
+                return 0, ""
+
+
+
+
         else:
             return -1, "Criterio no válido"
+
+
 
 
     # # 6.1.7
@@ -105,6 +165,8 @@ def ValidacionLFTexto(texto):
     #         return True, ocurrencias, "*No se debe utilizar (etcétera) (etc.), ni los puntos suspensivos (…). Se puede sustituir por (entre otros), (y muchos más) y otras frases similares.\n"
     #     else:
     #         return False, 0, "" 
+    
+    
     
     
     puntuacion = 100
