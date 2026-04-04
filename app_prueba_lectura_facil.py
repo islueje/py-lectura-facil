@@ -34,7 +34,8 @@ import py_lectura_facil as lf
 
 
 
-texto = "En ocasiones sin embargo se escribe etcétera o etc. con la puntuación inapropiada, como en los siguientes ejemplos: «Los inspectores les comunicaron a los titulares de los puestos de fruta, verduras, ropa, calzado, etc... que tendrán que instalarse más arriba» y «Asimismo se ocuparán otros espacios del recinto, como vestuarios, zonas para camerinos etc...»."
+#texto = "En ocasiones sin embargo se escribe etcétera o ETC. con la puntuación utilizada inapropiadaMENTE. mentecato como en los siguientes ejemplos: «Los inspectores les comunicaron a los titulares de los puestos de fruta, verduras, ropa, calzado, etc ... que tendrán que instalarse más arriba» y «Asimismo se ocuparán otros espacios del recinto, como vestuarios, zonas para camerinos etc...»."
+texto = " ;Ejemplo de texto con etc., etc y también podemos usar; ... o quizás Etc. (con mayúscula). To;do sigue, etcetera;;;... ; "
 
 
 puntuacion, recomendaciones = lf.ValidacionLFTexto(texto)
