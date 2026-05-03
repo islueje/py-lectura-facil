@@ -28,29 +28,35 @@ Aplicación de prueba del módulo py_lectura_facil.py
 
 
 
-# Importación de módulos
+# Importación del módulo de validación de textos de Lectura Fácil.
 import py_lectura_facil as lf
 
 
 
 
-#texto = "En ocasiones sin embargo se escribe etcétera o ETC. con la puntuación utilizada inapropiadaMENTE. mentecato como en los siguientes ejemplos: «Los inspectores les comunicaron a los titulares de los puestos de fruta, verduras, ropa, calzado, etc ... que tendrán que instalarse más arriba» y «Asimismo se ocuparán otros espacios del recinto, como vestuarios, zonas para camerinos etc...»."
-texto = " ;Ejemplo de texto con etc., etc y también podemos usar; ... o quizás Etc. (con mayúscula). To;do sigue, etcetera;;;... ; "
+# Captura del texto a validar.
+texto = input("\nIntroduce el texto a validar: ")
 
 
-puntuacion, recomendaciones = lf.ValidacionLFTexto(texto)
+# Proceso de validación de Lectura Fácil del texto.
+puntuacion, recomendaciones_ocurrencias = lf.ValidacionLFTexto(texto)
 
-rango, descripcion_rango = lf.RangoLFPuntuacion(puntuacion)
+
+# Cálculo del rango de Lectura Fácil.
+rango, descripcion_rango = lf.RangoLFTexto(puntuacion)
 
 
+# Salida por pantalla de los resultados obtenidos: validación de Lectura Fácil + rango de Lectura Fácil + recomendaciones y ocurrencias encontradas, 
+# en el caso de haberse detectado algún incumplimiento. 
+print("\n---")
+print("\nValidación LF (Puntuación): " + str(puntuacion))
 print("")
-print("Texto:\n\n" + texto)
+print("\nRango LF: " + rango + ". " + descripcion_rango)
 print("")
-print("Puntuación LF: " + str(puntuacion))
-print("")
-print("Rango LF: " + rango + ", " + descripcion_rango)
-print("")
-print("Recomendaciones:\n\n" + recomendaciones)
+if (len(recomendaciones_ocurrencias) > 0): 
+    print("\nRecomendaciones:\n\n" + recomendaciones_ocurrencias)
+else:
+    print("")
 
-    
-    
+
+
