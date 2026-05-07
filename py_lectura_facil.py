@@ -26,14 +26,6 @@ Módulo para la validación de textos de Lectura Fácil
 """
 
 
-
-
-# TO DO:
-# Revisar recomendaciones de implementaciones parciales de criterios. HECHO
-# (, ), [, ]. HECHO  
-# demente, cuando -> identificación de falsos positivos? HECHO  
-
-    
     
 
 # Importación de módulos
@@ -105,6 +97,7 @@ def ValidacionLFTexto(texto):
         Criterios[1]:  5, # No se debe utilizar
         Criterios[2]:  1, # Se debería evitar
         Criterios[3]:  5, # No se debe utilizar
+        
         Criterios[4]:  1, # Se debería evitar
         Criterios[5]:  3, # Se deben evitar
         Criterios[6]:  3, # Se deben evitar
@@ -138,34 +131,6 @@ def ValidacionLFTexto(texto):
     #   -String con las recomendaciones dictadas por el criterio comprobado y que no se cumple. 
     #       En este String también se incluirán las ocurrencias detectadas para el criterio comprobado y no cumplido.
     #       Si el criterio comprobado se cumple se devuelve "".
-    #
-    # ---
-    #
-    # Expresiones Regulares utilizadas:
-    #
-    # "\.\s*[a-záéíóúüñ]\w*\b"
-    # ";"
-    # "(\([^)]+\)|\[[^)]+\]|\%|\betc\b|\&|\/)" re.IGNORECASE
-    # "(\betcétera\b|\.\.\.)" re.IGNORECASE
-            
-    # "\b\w+\b"
-    # "\w+mente\b" re.IGNORECASE
-    # "(\w+ísimo\b|\w+ísima\b|\w+érrimo\b)" re.IGNORECASE
-    # "(\bcosa\b|\balgo\b|\basunto\b)" re.IGNORECASE
-    # "\+?[1-9]\d{7,14}"
-    # "(\w+\.\º|\w+\.\ª)"
-    # "(\d+/\d+|\d+%)"
-    # "(\d{2}[/-]\d{2}[/-]\d{4}|\d{4}[/-]\d{2}[/-]\d{2})"
-    # "([0-1]\d:[0-5]\d|2[0-3]:[0-5]\d)"
-            
-    # "\b(he|has|ha|hemos|habéis|han|había|habías|habíamos|habíais|habían|hube|hubiste|hubo|hubimos|hubisteis|hubieron|habré|habrás|habrá|habremos|habréis|habrán|habría|habrías|habríamos|habríais|habrían|haya|hayas|hayamos|hayáis|hayan|hubiera|hubieras|hubiéramos|hubierais|hubieran|hubiese|hubieses|hubiésemos|hubieseis|hubiesen|hubiere|hubieres|hubiéremos|hubiereis|hubieren)\s+(\w+)(do|to|so|cho)\b" re.IGNORECASE
-    # "\b(soy|eres|es|somos|sois|son|fui|fuiste|fue|fuimos|fuisteis|fueron|sido|siendo|será|serán|sería)\s+(\w+)(ado|ido|ido|ido|to|so|cho)\b" re.IGNORECASE
-    # "(\b\w+ando\b|\b\w+iendo\b|\b\w+yendo\b)" re.IGNORECASE
-    # "(\bpor lo tanto\b|\bno obstante\b|\bpor consiguiente\b|\bsin embargo\b)" re.IGNORECASE
-            
-    # "(\w+o/a\b|\w+os/as\b|@)" re.IGNORECASE
-    #
-    #
         
     def Utilizacion(criterio, texto):
 
