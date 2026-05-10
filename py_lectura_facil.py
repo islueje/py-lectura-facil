@@ -384,6 +384,9 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
         num_ocurrencias, recomendacion_ocurrencias = Utilizacion(c, texto)
         puntuacion = puntuacion - num_ocurrencias * Ponderacion_Criterios[c]
         recomendaciones_ocurrencias = recomendaciones_ocurrencias + recomendacion_ocurrencias
+        
+    if (puntuacion < 0):
+        puntuacion = 0
     
     return puntuacion, recomendaciones_ocurrencias
 
