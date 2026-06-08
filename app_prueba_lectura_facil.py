@@ -34,21 +34,24 @@ import py_lectura_facil as lf
 
 
 
+print("\n\n\n--- Validación de textos de Lectura Fácil ---\n")
+
+
 # Captura del texto a validar.
 texto = input("\nIntroduce el texto a validar: ")
 
 
 # Proceso de validación de Lectura Fácil del texto.
-puntuacion, recomendaciones_ocurrencias = lf.ValidacionLFTexto(texto)
+puntuacion, recomendaciones_ocurrencias = lf.validacion_lf_texto(texto)
 
 
 # Cálculo del rango de Lectura Fácil.
-rango, descripcion_rango = lf.RangoLFTexto(puntuacion)
+rango, descripcion_rango = lf.rango_lf_texto(puntuacion)
 
 
 # Salida por pantalla de los resultados obtenidos: validación de Lectura Fácil + rango de Lectura Fácil + recomendaciones y ocurrencias encontradas, 
 # en el caso de haberse detectado algún incumplimiento. 
-print("\n---")
+print("\n\n---")
 print("\nValidación LF (Puntuación): " + str(puntuacion))
 print("")
 print("\nRango LF: " + rango + ". " + descripcion_rango)
