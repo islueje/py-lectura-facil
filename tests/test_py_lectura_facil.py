@@ -26,19 +26,10 @@ Pruebas unitarias del módulo py_lectura_facil.py
 """
 
 
-# Pruebas incluidas:
-
-# 
-# 
-# 
-# 
-# 
-# 
 
 
 # !pytest -v
 # !pytest --cov=py_lectura_facil --cov-report term-missing
-# módulo pytest-cov 7.1.0
 
 
 
@@ -61,8 +52,7 @@ from py_lectura_facil import (
 
 
 
-# TESTS GENERALES
-
+# Tests generales.
 
 def test_texto_simple_deberia_tener_puntuacion_alta():
     texto = "Ana vive en Madrid. Ana lee libros fáciles."
@@ -96,8 +86,7 @@ def test_recomendaciones_deben_ser_string():
 
 
 
-# TESTS CRITERIOS INDIVIDUALES
-
+# Tests de criterios individuales.
 
 @pytest.mark.parametrize(
     "texto,fragmento",
@@ -185,8 +174,7 @@ def test_criterios_detectados(texto, fragmento):
 
 
 
-# TESTS FALSOS POSITIVOS
-
+# Tests de falsos positivos.
 
 def test_demente_no_debe_detectarse_como_adverbio_mente():
 
@@ -210,8 +198,7 @@ def test_cuando_no_debe_detectarse_como_gerundio():
 
 
 
-# TESTS PUNTUACIÓN
-
+# Tests de puntuación.
 
 def test_punto_y_coma_resta_5_puntos():
 
@@ -245,8 +232,7 @@ def test_varios_criterios_reducen_puntuacion():
 
 
 
-# TESTS RANGOS LF
-
+# Tests de rango.
 
 @pytest.mark.parametrize(
     "puntuacion,rango",
@@ -285,8 +271,7 @@ def test_rangos_invalidos(puntuacion):
 
 
 
-# TESTS CASOS LÍMITE
-
+# Tests de casos límite.
 
 def test_texto_vacio():
 
@@ -313,16 +298,6 @@ def test_texto_con_multiples_ocurrencias():
     assert puntuacion == 90
     assert "rápidamente" in recomendaciones.lower()
 
-
-# def test_deteccion_telefonos():
-
-#     texto = "Llama al 666777888"
-
-#     puntuacion, recomendaciones = validacion_lf_texto(texto)
-
-#     assert puntuacion == 99
-#     assert "teléfono" in recomendaciones.lower()
-
-    
+   
     
     
