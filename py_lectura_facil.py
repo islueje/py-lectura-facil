@@ -49,13 +49,13 @@ import re # Módulo Python para el uso de expresiones regulares.
 #   -String con las recomendaciones dictadas por cada criterio no cumplido. 
 #       En este String también se incluirán las ocurrencias detectadas por cada criterio no cumplido.
 
-def ValidacionLFTexto(texto):
+def validacion_lf_texto(texto):
     
     
     # Listado con los 18 criterios de Lectura Fácil a validar, definidos en la norma UNE 153101:2018 EX.
     # La utilización de lo indicado en el criterio implica el no cumplimiento del mismo.
     
-    Criterios = (    
+    criterios = (    
         
         # 6.1.- Pautas y recomendaciones relacionadas con la ortotipografía
         "UtilizacionMinusculasInicialesDespuesPunto", # 6.1.2
@@ -91,29 +91,29 @@ def ValidacionLFTexto(texto):
     # Se considerará como más grave el incumplimiento de un criterio con indicación de "No se debe utilizar" 
     # y el menos grave el incumplimiento de un "Se debería evitar".
     
-    Ponderacion_Criterios = {
+    ponderacion_criterios = {
         
-        Criterios[0]:  5, # No se debe utilizar
-        Criterios[1]:  5, # No se debe utilizar
-        Criterios[2]:  1, # Se debería evitar
-        Criterios[3]:  5, # No se debe utilizar
+        criterios[0]:  5, # No se debe utilizar
+        criterios[1]:  5, # No se debe utilizar
+        criterios[2]:  1, # Se debería evitar
+        criterios[3]:  5, # No se debe utilizar
         
-        Criterios[4]:  1, # Se debería evitar
-        Criterios[5]:  3, # Se deben evitar
-        Criterios[6]:  3, # Se deben evitar
-        Criterios[7]:  1, # Se debería evitar
-        Criterios[8]:  1, # Se debería evitar
-        Criterios[9]:  1, # Se debería evitar
-        Criterios[10]: 1, # Se debería evitar
-        Criterios[11]: 1, # Se debería evitar
-        Criterios[12]: 1, # Se debería evitar
+        criterios[4]:  1, # Se debería evitar
+        criterios[5]:  3, # Se deben evitar
+        criterios[6]:  3, # Se deben evitar
+        criterios[7]:  1, # Se debería evitar
+        criterios[8]:  1, # Se debería evitar
+        criterios[9]:  1, # Se debería evitar
+        criterios[10]: 1, # Se debería evitar
+        criterios[11]: 1, # Se debería evitar
+        criterios[12]: 1, # Se debería evitar
                 
-        Criterios[13]: 1, # Se deberían evitar
-        Criterios[14]: 3, # Se debe evitar
-        Criterios[15]: 1, # Se debería evitar en lo posible
-        Criterios[16]: 1, # Se debería evitar
+        criterios[13]: 1, # Se deberían evitar
+        criterios[14]: 3, # Se debe evitar
+        criterios[15]: 1, # Se debería evitar en lo posible
+        criterios[16]: 1, # Se debería evitar
         
-        Criterios[17]: 3  # Se debe evitar
+        criterios[17]: 3  # Se debe evitar
     }
 
 
@@ -132,11 +132,11 @@ def ValidacionLFTexto(texto):
     #       En este String también se incluirán las ocurrencias detectadas para el criterio comprobado y no cumplido.
     #       Si el criterio comprobado se cumple se devuelve "".
         
-    def Utilizacion(criterio, texto):
+    def utilizacion(criterio, texto):
 
         
         # "UtilizacionMinusculasInicialesDespuesPunto" 6.1.2
-        if (criterio == Criterios[0]): 
+        if (criterio == criterios[0]): 
             
             ocurrencias = re.findall(r"\.\s*[a-záéíóúüñ]\w*\b", texto)
             
@@ -148,7 +148,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
         
                 
         # "UtilizacionPuntoComa" 6.1.7
-        if (criterio == Criterios[1]): 
+        if (criterio == criterios[1]): 
             
             ocurrencias = re.findall(r";", texto)
             
@@ -159,7 +159,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # "UtilizacionParentesisCorchetesOSignosOrtográficosPocoHabituales" 6.1.8
-        elif (criterio == Criterios[2]): 
+        elif (criterio == criterios[2]): 
             
             ocurrencias = re.findall(r"(\([^)]+\)|\[[^)]+\]|\%|\betc\b|\&|\/)", texto, re.IGNORECASE)
             
@@ -171,7 +171,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # "UtilizacionEtcOPuntosSuspensivos" 6.1.9
-        elif (criterio == Criterios[3]): 
+        elif (criterio == criterios[3]): 
             
             ocurrencias = re.findall(r"(\betcétera\b|\.\.\.)", texto, re.IGNORECASE)
             
@@ -183,32 +183,32 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # "UtilizacionPalabrasLargas" 6.2.6
-        elif (criterio == Criterios[4]): 
+        elif (criterio == criterios[4]): 
             
             # Se considerarán palabras muy largas aquellas que tengan una longuitud mayor o igual a 13 letras. De acuerdo a la Real Academia Española (RAE), 
             # las palabras más largas en el idioma español tienen entre 13 y 23 letras.
             LONGITUD_MINIMA_PALABRA_LARGA = 13
 
-            ocurrenciasPalabrasLargas = []
+            ocurrencias_palabras_largas = []
             
             palabras = re.findall(r"\b\w+\b", texto)
             for p in palabras:
                 if (len(p) >= LONGITUD_MINIMA_PALABRA_LARGA):
-                    ocurrenciasPalabrasLargas.append(p)
+                    ocurrencias_palabras_largas.append(p)
                     
             ocurrencias = ""
-            if (len(ocurrenciasPalabrasLargas) > 0):
-                ocurrencias = ocurrencias + str(ocurrenciasPalabrasLargas) + " "
+            if (len(ocurrencias_palabras_largas) > 0):
+                ocurrencias = ocurrencias + str(ocurrencias_palabras_largas) + " "
             	    
-            if (len(ocurrenciasPalabrasLargas) > 0):
-                return len(ocurrenciasPalabrasLargas), "*Se debería evitar el uso de palabras muy largas o que contengan sílabas complejas. \n\t->\
+            if (len(ocurrencias_palabras_largas) > 0):
+                return len(ocurrencias_palabras_largas), "*Se debería evitar el uso de palabras muy largas o que contengan sílabas complejas. \n\t->\
 Se han detectado las siguientes ocurrencias: " + ocurrencias + "\n\n"
             else:
                 return 0, ""
 
 
         # "UtilizacionAdverbiosMente" 6.2.7    
-        elif (criterio == Criterios[5]): 
+        elif (criterio == criterios[5]): 
             
             falsos_positivos = ["demente", "DEMENTE"]
         
@@ -223,7 +223,7 @@ Se han detectado las siguientes ocurrencias: " + ocurrencias + "\n\n"
 
 
         #  "UtilizacionSuperlativos" 6.2.8    
-        elif (criterio == Criterios[6]): 
+        elif (criterio == criterios[6]): 
         
             ocurrencias = re.findall(r"(\w+ísimo\b|\w+ísima\b|\w+érrimo\b)", texto, re.IGNORECASE)
 	    
@@ -235,7 +235,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # "UtilizacionPalabrasContenidoIndeterminado" 6.2.18
-        elif (criterio == Criterios[7]): 
+        elif (criterio == criterios[7]): 
             
             # cosa, algo o asunto
             ocurrencias = re.findall(r"(\bcosa\b|\balgo\b|\basunto\b)", texto, re.IGNORECASE)
@@ -248,7 +248,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # "UtilizacionTelefonosSinBloques" 6.2.20
-        elif (criterio == Criterios[8]): 
+        elif (criterio == criterios[8]): 
             
             ocurrencias = re.findall(r"\+?[1-9]\d{7,14}", texto)
             
@@ -260,7 +260,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # "UtilizacionCaracteresOrdinales" 6.2.21
-        elif (criterio == Criterios[9]): 
+        elif (criterio == criterios[9]): 
             
             ocurrencias = re.findall(r"(\w+\.\º|\w+\.\ª)", texto)
             
@@ -272,7 +272,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # "UtilizacionFraccionesOPorcentajes" 6.2.22
-        elif (criterio == Criterios[10]): 
+        elif (criterio == criterios[10]): 
             
             ocurrencias = re.findall(r"(\d+/\d+|\d+%)", texto)
             
@@ -284,7 +284,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # "UtilizacionFechasConGuionesOBarras" 6.2.23
-        elif (criterio == Criterios[11]): 
+        elif (criterio == criterios[11]): 
             
             ocurrencias = re.findall(r"(\d{2}[/-]\d{2}[/-]\d{4}|\d{4}[/-]\d{2}[/-]\d{2})", texto)
             
@@ -296,7 +296,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # "UtilizacionHoras24H" 6.2.24
-        elif (criterio == Criterios[12]): 
+        elif (criterio == criterios[12]): 
             
             ocurrencias = re.findall(r"([0-1]\d:[0-5]\d|2[0-3]:[0-5]\d)", texto)
             
@@ -308,19 +308,19 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # "UtilizacionTiemposVerbalesCompuestos" 6.3.3
-        elif (criterio == Criterios[13]): 
+        elif (criterio == criterios[13]): 
                     
-            ocurrenciasTiemposVerbalesCompuestos = re.findall(r"\b(he|has|ha|hemos|habéis|han|había|habías|habíamos|habíais|habían|hube|hubiste|hubo|hubimos|hubisteis|hubieron|habré|habrás|habrá|habremos|habréis|habrán|habría|habrías|habríamos|habríais|habrían|haya|hayas|hayamos|hayáis|hayan|hubiera|hubieras|hubiéramos|hubierais|hubieran|hubiese|hubieses|hubiésemos|hubieseis|hubiesen|hubiere|hubieres|hubiéremos|hubiereis|hubieren)\s+(\w+)(do|to|so|cho)\b", texto, re.IGNORECASE)
+            ocurrencias_tiempos_verbales_compuestos = re.findall(r"\b(he|has|ha|hemos|habéis|han|había|habías|habíamos|habíais|habían|hube|hubiste|hubo|hubimos|hubisteis|hubieron|habré|habrás|habrá|habremos|habréis|habrán|habría|habrías|habríamos|habríais|habrían|haya|hayas|hayamos|hayáis|hayan|hubiera|hubieras|hubiéramos|hubierais|hubieran|hubiese|hubieses|hubiésemos|hubieseis|hubiesen|hubiere|hubieres|hubiéremos|hubiereis|hubieren)\s+(\w+)(do|to|so|cho)\b", texto, re.IGNORECASE)
             	    
-            if (len(ocurrenciasTiemposVerbalesCompuestos) > 0):
-                return len(ocurrenciasTiemposVerbalesCompuestos), "*Se deberían evitar los tiempos verbales compuestos o poco frecuentes y el uso de los condicionales y subjuntivos. \n\t->\
-Se han detectado las siguientes ocurrencias: " + str(ocurrenciasTiemposVerbalesCompuestos) + "\n\n"
+            if (len(ocurrencias_tiempos_verbales_compuestos) > 0):
+                return len(ocurrencias_tiempos_verbales_compuestos), "*Se deberían evitar los tiempos verbales compuestos o poco frecuentes y el uso de los condicionales y subjuntivos. \n\t->\
+Se han detectado las siguientes ocurrencias: " + str(ocurrencias_tiempos_verbales_compuestos) + "\n\n"
             else:
                 return 0, ""
 
 
         # "UtilizacionVozPasiva" 6.3.4
-        elif (criterio == Criterios[14]): 
+        elif (criterio == criterios[14]): 
             
             ocurrencias = re.findall(r"\b(soy|eres|es|somos|sois|son|fui|fuiste|fue|fuimos|fuisteis|fueron|sido|siendo|será|serán|sería)\s+(\w+)(ado|ido|ido|ido|to|so|cho)\b", texto, re.IGNORECASE)
             
@@ -332,7 +332,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # "UtilizacionGerundio" 6.3.8
-        elif (criterio == Criterios[15]): 
+        elif (criterio == criterios[15]): 
             
             falsos_positivos = ["cuando", "CUANDO"]
             
@@ -348,7 +348,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # "UtilizacionConectoresComplejos" 6.3.16
-        elif (criterio == Criterios[16]): 
+        elif (criterio == criterios[16]): 
             
             ocurrencias = re.findall(r"(\bpor lo tanto\b|\bno obstante\b|\bpor consiguiente\b|\bsin embargo\b)", texto, re.IGNORECASE)
             
@@ -360,7 +360,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
         # UtilizacionARROBAODesdoblamientoConBarras"" 6.4.9
-        elif (criterio == Criterios[17]): 
+        elif (criterio == criterios[17]): 
             
             ocurrencias = re.findall(r"(\w+o/a\b|\w+os/as\b|@)", texto, re.IGNORECASE)
             
@@ -371,8 +371,8 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
                 return 0, ""
 
 
-        else:
-            return -1, "Criterio no válido"
+        #else:
+        #    return -1, "Criterio no válido"
     
     
     
@@ -380,9 +380,9 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
     puntuacion = 100
     recomendaciones_ocurrencias = ""
     
-    for c in Criterios:
-        num_ocurrencias, recomendacion_ocurrencias = Utilizacion(c, texto)
-        puntuacion = puntuacion - num_ocurrencias * Ponderacion_Criterios[c]
+    for c in criterios:
+        num_ocurrencias, recomendacion_ocurrencias = utilizacion(c, texto)
+        puntuacion = puntuacion - num_ocurrencias * ponderacion_criterios[c]
         recomendaciones_ocurrencias = recomendaciones_ocurrencias + recomendacion_ocurrencias
         
     if (puntuacion < 0):
@@ -397,7 +397,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 
 
 
-# Este método se encarga de calcular un rango de Lectura Fácil en función de una puntuación devuelta por ValidacionLFTexto(texto).
+# Este método se encarga de calcular un rango de Lectura Fácil en función de una puntuación devuelta por validacion_lf_texto(texto).
 #
 # Se definen los siguientes rangos de Lectura Fácil:
 #   -Rango I. [0..19]. El texto NO CUMPLE CON CASI NINGUNA de las características que definen la Lectura Fácil. 
@@ -407,16 +407,16 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
 #   -Rango V. [80..100]. El texto CUMPLE CON CASI TODAS las características que definen la Lectura Fácil. 
 #
 # Este método recibe:
-#   -puntuacion, Entero con la puntuación devuelta por ValidacionLFTexto(texto). 
+#   -puntuacion, Entero con la puntuación devuelta por validacion_lf_texto(texto). 
 #
 # El método devuelve:
 #   -String con el rango de Lectura Fácil calculado.
 #   -String con la descripción del rango de Lectura Fácil.   
  
-def RangoLFTexto(puntuacion):
+def rango_lf_texto(puntuacion):
     
     
-    Rangos_LF = {
+    rangos_lf = {
         
         "I": "El texto NO CUMPLE CON CASI NINGUNA de las características que definen la Lectura Fácil.",
         "II": "El texto CUMPLE CON ALGUNAS de las características que definen la Lectura Fácil.",
@@ -427,19 +427,19 @@ def RangoLFTexto(puntuacion):
     
     
     if (puntuacion >= 0 and puntuacion <= 19):
-        return "I", Rangos_LF["I"]
+        return "I", rangos_lf["I"]
     
     elif (puntuacion >= 20 and puntuacion <= 39):
-        return "II", Rangos_LF["II"]
+        return "II", rangos_lf["II"]
     
     elif (puntuacion >= 40 and puntuacion <= 59):
-        return "III", Rangos_LF["III"]
+        return "III", rangos_lf["III"]
     
     elif (puntuacion >= 60 and puntuacion <= 79):
-        return "IV", Rangos_LF["IV"]
+        return "IV", rangos_lf["IV"]
     
     elif (puntuacion >= 80 and puntuacion <= 100):
-        return "V", Rangos_LF["V"]
+        return "V", rangos_lf["V"]
     
     else:
         return "", "Puntuación no válida"
