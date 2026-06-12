@@ -291,11 +291,11 @@ def test_texto_con_solo_espacios():
 
 def test_texto_con_multiples_ocurrencias():
 
-    texto = "rápidamente lentamente cuidadosamente"
+    texto = "rápidamente lentamente investigaciones"
 
     puntuacion, recomendaciones = validacion_lf_texto(texto)
 
-    assert puntuacion == 90
+    assert puntuacion == 93
     assert "rápidamente" in recomendaciones.lower()
 
    
