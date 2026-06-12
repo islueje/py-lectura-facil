@@ -40,6 +40,7 @@ import re # Módulo Python para el uso de expresiones regulares.
 # Inicialmente, la validación, la puntuación de validación, parte de 100 puntos.
 # Sucesivamente se van revisando los 18 criterios y en caso de existir utilización de los mismos, lo que indica que no se cumplen los criterios, 
 # se van descontando puntos de validación según una ponderación del criterio y el número de ocurrencias de utilización del mismo.
+# El número de ocurrencias por criterio tendrá un umbral máximo de 10 hallazgos.
 #
 # Este método recibe:
 #   -texto, String con el texto a validar. 
@@ -127,7 +128,8 @@ def validacion_lf_texto(texto):
     #   -texto, String con el texto a validar. 
     #
     # El método devuelve:
-    #   -Entero con el número de ocurrencias del criterio comprobado. Si el criterio comprobado se cumple se devuelve 0.
+    #   -Entero con el número de ocurrencias del criterio comprobado. Si el criterio comprobado se cumple se devuelve 0. 
+    #       El número de ocurrencias por criterio tendrá un umbral máximo de 10 hallazgos.
     #   -String con las recomendaciones dictadas por el criterio comprobado y que no se cumple. 
     #       En este String también se incluirán las ocurrencias detectadas para el criterio comprobado y no cumplido.
     #       Si el criterio comprobado se cumple se devuelve "".
@@ -135,13 +137,19 @@ def validacion_lf_texto(texto):
     def utilizacion(criterio, texto):
 
         
+        # El número de ocurrencias por criterio tendrá un umbral máximo de 10 hallazgos.
+        UMBRAL_OCURRENCIAS = 10
+        
+        
         # "UtilizacionMinusculasInicialesDespuesPunto" 6.1.2
         if (criterio == criterios[0]): 
             
             ocurrencias = re.findall(r"\.\s*[a-záéíóúüñ]\w*\b", texto)
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):
-                return len(ocurrencias), "*Se debe utilizar la mayúscula inicial al principio de un párrafo o un título, después de punto o en nombres propios. \n\t->\
+                return num_ocurrencias, "*Se debe utilizar la mayúscula inicial al principio de un párrafo o un título, después de punto o en nombres propios. \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, "" 
@@ -151,9 +159,11 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
         if (criterio == criterios[1]): 
             
             ocurrencias = re.findall(r";", texto)
+
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
             
             if (len(ocurrencias) > 0):
-                return len(ocurrencias), "*No se debe utilizar el punto y coma (;). \n\t->Se han detectado " + str(len(ocurrencias)) + " ocurrencias.\n\n"
+                return num_ocurrencias, "*No se debe utilizar el punto y coma (;). \n\t->Se han detectado " + str(len(ocurrencias)) + " ocurrencias.\n\n"
             else:
                 return 0, "" 
 
@@ -163,8 +173,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             
             ocurrencias = re.findall(r"(\([^)]+\)|\[[^)]+\]|\%|\betc\b|\&|\/)", texto, re.IGNORECASE)
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):    
-                return len(ocurrencias), "*Se debería evitar el uso de paréntesis, corchetes y signos ortográficos poco habituales (%, &, /, …, etc.). \n\t->\
+                return num_ocurrencias, "*Se debería evitar el uso de paréntesis, corchetes y signos ortográficos poco habituales (%, &, /, …, etc.). \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
@@ -175,8 +187,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             
             ocurrencias = re.findall(r"(\betcétera\b|\.\.\.)", texto, re.IGNORECASE)
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):    
-                return len(ocurrencias), "*No se debe utilizar (etcétera), ni los puntos suspensivos (…). Se puede sustituir por (entre otros), (y muchos más) y otras frases similares. \n\t->\
+                return num_ocurrencias, "*No se debe utilizar (etcétera), ni los puntos suspensivos (…). Se puede sustituir por (entre otros), (y muchos más) y otras frases similares. \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
@@ -185,9 +199,9 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
         # "UtilizacionPalabrasLargas" 6.2.6
         elif (criterio == criterios[4]): 
             
-            # Se considerarán palabras muy largas aquellas que tengan una longuitud mayor o igual a 13 letras. De acuerdo a la Real Academia Española (RAE), 
+            # Se considerarán palabras muy largas aquellas que tengan una longuitud mayor o igual a 15 letras. De acuerdo a la Real Academia Española (RAE), 
             # las palabras más largas en el idioma español tienen entre 13 y 23 letras.
-            LONGITUD_MINIMA_PALABRA_LARGA = 13
+            LONGITUD_MINIMA_PALABRA_LARGA = 15
 
             ocurrencias_palabras_largas = []
             
@@ -199,9 +213,11 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             ocurrencias = ""
             if (len(ocurrencias_palabras_largas) > 0):
                 ocurrencias = ocurrencias + str(ocurrencias_palabras_largas) + " "
-            	    
+                
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias_palabras_largas) > UMBRAL_OCURRENCIAS) else len(ocurrencias_palabras_largas)
+                	    
             if (len(ocurrencias_palabras_largas) > 0):
-                return len(ocurrencias_palabras_largas), "*Se debería evitar el uso de palabras muy largas o que contengan sílabas complejas. \n\t->\
+                return num_ocurrencias, "*Se debería evitar el uso de palabras muy largas o que contengan sílabas complejas. \n\t->\
 Se han detectado las siguientes ocurrencias: " + ocurrencias + "\n\n"
             else:
                 return 0, ""
@@ -215,9 +231,11 @@ Se han detectado las siguientes ocurrencias: " + ocurrencias + "\n\n"
             ocurrencias = re.findall(r"\w+mente\b", texto, re.IGNORECASE)
             
             ocurrencias = list(set(ocurrencias) - set(falsos_positivos))
+            
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
             	    
             if (len(ocurrencias) > 0):
-                return len(ocurrencias), "*Se deben evitar los adverbios terminados en (–mente). \n\t->Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
+                return num_ocurrencias, "*Se deben evitar los adverbios terminados en (–mente). \n\t->Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
 
@@ -226,9 +244,11 @@ Se han detectado las siguientes ocurrencias: " + ocurrencias + "\n\n"
         elif (criterio == criterios[6]): 
         
             ocurrencias = re.findall(r"(\w+ísimo\b|\w+ísima\b|\w+érrimo\b)", texto, re.IGNORECASE)
+            
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
 	    
             if (len(ocurrencias) > 0):
-                return len(ocurrencias), "*Se deben evitar los superlativos. Es recomendable añadir el adverbio muy al adjetivo o al adverbio. \n\t->\
+                return num_ocurrencias, "*Se deben evitar los superlativos. Es recomendable añadir el adverbio muy al adjetivo o al adverbio. \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
@@ -240,8 +260,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             # cosa, algo o asunto
             ocurrencias = re.findall(r"(\bcosa\b|\balgo\b|\basunto\b)", texto, re.IGNORECASE)
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):    
-                return len(ocurrencias), "*Se debería evitar el uso de palabras de contenido indeterminado como: (cosa), (algo) o (asunto). \n\t->\
+                return num_ocurrencias, "*Se debería evitar el uso de palabras de contenido indeterminado como: (cosa), (algo) o (asunto). \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
@@ -252,8 +274,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             
             ocurrencias = re.findall(r"\+?[1-9]\d{7,14}", texto)
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):    
-                return len(ocurrencias), "*Los números de teléfono se deberían separar por bloques. \n\t->\
+                return num_ocurrencias, "*Los números de teléfono se deberían separar por bloques. \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
@@ -264,8 +288,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             
             ocurrencias = re.findall(r"(\w+\.\º|\w+\.\ª)", texto)
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):    
-                return len(ocurrencias), "*Se debería evitar el uso de números ordinales (ej. 1.º) y sustituirlos por números cardinales (1). \n\t->\
+                return num_ocurrencias, "*Se debería evitar el uso de números ordinales (ej. 1.º) y sustituirlos por números cardinales (1). \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
@@ -276,8 +302,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             
             ocurrencias = re.findall(r"(\d+/\d+|\d+%)", texto)
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):    
-                return len(ocurrencias), "*Se debería evitar el uso de fracciones y de porcentajes. \n\t->\
+                return num_ocurrencias, "*Se debería evitar el uso de fracciones y de porcentajes. \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
@@ -288,8 +316,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             
             ocurrencias = re.findall(r"(\d{2}[/-]\d{2}[/-]\d{4}|\d{4}[/-]\d{2}[/-]\d{2})", texto)
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):    
-                return len(ocurrencias), "*Se debería evitar escribir la fecha con guiones o barras. Se debería escribir la fecha completa y el nombre del día cuando aporte información adicional para la comprensión del texto. \n\t->\
+                return num_ocurrencias, "*Se debería evitar escribir la fecha con guiones o barras. Se debería escribir la fecha completa y el nombre del día cuando aporte información adicional para la comprensión del texto. \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
@@ -300,8 +330,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             
             ocurrencias = re.findall(r"([0-1]\d:[0-5]\d|2[0-3]:[0-5]\d)", texto)
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):    
-                return len(ocurrencias), "*Se debería evitar escribir la hora en formato 24 horas. \n\t->\
+                return num_ocurrencias, "*Se debería evitar escribir la hora en formato 24 horas. \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
@@ -312,8 +344,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
                     
             ocurrencias_tiempos_verbales_compuestos = re.findall(r"\b(he|has|ha|hemos|habéis|han|había|habías|habíamos|habíais|habían|hube|hubiste|hubo|hubimos|hubisteis|hubieron|habré|habrás|habrá|habremos|habréis|habrán|habría|habrías|habríamos|habríais|habrían|haya|hayas|hayamos|hayáis|hayan|hubiera|hubieras|hubiéramos|hubierais|hubieran|hubiese|hubieses|hubiésemos|hubieseis|hubiesen|hubiere|hubieres|hubiéremos|hubiereis|hubieren)\s+(\w+)(do|to|so|cho)\b", texto, re.IGNORECASE)
             	    
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias_tiempos_verbales_compuestos) > UMBRAL_OCURRENCIAS) else len(ocurrencias_tiempos_verbales_compuestos)
+
             if (len(ocurrencias_tiempos_verbales_compuestos) > 0):
-                return len(ocurrencias_tiempos_verbales_compuestos), "*Se deberían evitar los tiempos verbales compuestos o poco frecuentes y el uso de los condicionales y subjuntivos. \n\t->\
+                return num_ocurrencias, "*Se deberían evitar los tiempos verbales compuestos o poco frecuentes y el uso de los condicionales y subjuntivos. \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias_tiempos_verbales_compuestos) + "\n\n"
             else:
                 return 0, ""
@@ -324,8 +358,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias_tiempos_verbale
             
             ocurrencias = re.findall(r"\b(soy|eres|es|somos|sois|son|fui|fuiste|fue|fuimos|fuisteis|fueron|sido|siendo|será|serán|sería)\s+(\w+)(ado|ido|ido|ido|to|so|cho)\b", texto, re.IGNORECASE)
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):    
-                return len(ocurrencias), "*Se debe evitar la voz pasiva. \n\t->\
+                return num_ocurrencias, "*Se debe evitar la voz pasiva. \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
@@ -340,8 +376,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             
             ocurrencias = list(set(ocurrencias) - set(falsos_positivos))
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):    
-                return len(ocurrencias), "*Se debería evitar en lo posible el uso de oraciones con gerundio. \n\t->\
+                return num_ocurrencias, "*Se debería evitar en lo posible el uso de oraciones con gerundio. \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
@@ -352,8 +390,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             
             ocurrencias = re.findall(r"(\bpor lo tanto\b|\bno obstante\b|\bpor consiguiente\b|\bsin embargo\b)", texto, re.IGNORECASE)
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):    
-                return len(ocurrencias), "*Se debería evitar el uso de conectores complejos entre oraciones, como (por lo tanto), (no obstante), (por consiguiente) o (sin embargo). \n\t->\
+                return num_ocurrencias, "*Se debería evitar el uso de conectores complejos entre oraciones, como (por lo tanto), (no obstante), (por consiguiente) o (sin embargo). \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
@@ -364,8 +404,10 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             
             ocurrencias = re.findall(r"(\w+o/a\b|\w+os/as\b|@)", texto, re.IGNORECASE)
             
+            num_ocurrencias = UMBRAL_OCURRENCIAS if (len(ocurrencias) > UMBRAL_OCURRENCIAS) else len(ocurrencias)
+            
             if (len(ocurrencias) > 0):    
-                return len(ocurrencias), "*Se debe evitar el uso de caracteres especiales como (@) o el desdoblamiento con barras (ej. abogados/as). \n\t->\
+                return num_ocurrencias, "*Se debe evitar el uso de caracteres especiales como (@) o el desdoblamiento con barras (ej. abogados/as). \n\t->\
 Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
             else:
                 return 0, ""
