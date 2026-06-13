@@ -61,7 +61,7 @@ def validacion_lf_texto(texto):
         # 6.1.- Pautas y recomendaciones relacionadas con la ortotipografía
         "UtilizacionMinusculasInicialesDespuesPunto", # 6.1.2
         "UtilizacionPuntoComa", # 6.1.7
-        "UtilizacionParentesisCorchetesOSignosOrtográficosPocoHabituales", # 6.1.8
+        "UtilizacionParentesisCorchetesOSignosOrtograficosPocoHabituales", # 6.1.8
         "UtilizacionEtceteraOPuntosSuspensivos", # 6.1.9
         
         # 6.2.- Pautas y recomendaciones relacionadas con el vocabulario y las expresiones
@@ -168,7 +168,7 @@ Se han detectado las siguientes ocurrencias: " + str(ocurrencias) + "\n\n"
                 return 0, "" 
 
 
-        # "UtilizacionParentesisCorchetesOSignosOrtográficosPocoHabituales" 6.1.8
+        # "UtilizacionParentesisCorchetesOSignosOrtograficosPocoHabituales" 6.1.8
         elif (criterio == criterios[2]): 
             
             ocurrencias = re.findall(r"(\([^)]+\)|\[[^)]+\]|\%|\betc\b|\&|\/)", texto, re.IGNORECASE)
